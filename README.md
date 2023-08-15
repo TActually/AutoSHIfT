@@ -18,7 +18,7 @@ I say similar because:<BR>
     Flatpak (you can, remove the flatpak commands if you don't use flatpaks)
     
 ## Installation and Usage
-Simply download the script, <A HREF="https://github.com/TActually/AutoSHIfT/releases">Download Page</A><BR>
+Simply download the script from the <A HREF="https://github.com/TActually/AutoSHIfT/releases">Download Page</A><BR> or clone the repository.
 Make it executable: `chmod +x AutoSHIfT.sh`<BR>
 Then run it with sudo: `sudo ./AutoSHIfT.sh`
 
