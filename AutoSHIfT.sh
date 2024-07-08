@@ -14,6 +14,11 @@
 #  I'm not much of a coder, you see the script, modify it for your needs.
 #  ***IMPORTANT*** First/Manual run of this script must be run as root (sudo)!
 ################################################################################
+# check for root priviledges
+if [ $(id -u) -ne 0 ]
+  then echo "Please Run this script as root or with sudo."
+  exit
+fi
 
 # This line discovers the 1st signed in user for the location of the script & logs.
 liuser=$(users | cut -d ' ' -f 1)
@@ -39,8 +44,11 @@ if [ $(dnf list installed "timeshift" | grep -c "timeshift") -ge 1 ]
 then
     :
 else
-    echo "The Timeshift Backup Utility is not installed on this system.";
-    echo "This script will exit. Please run 'sudo dnf install timeshift', then re-run this script.";
+    echo "This script requires Timeshift backup utility and it ain't here. Installing it..." && sleep 1s;
+    echo "Now!" && sleep 1s; dnf install timeshift -y;
+    echo "Now that Timeshift has been installed, please take the time to set it up.";
+    echo "You'll need to setup your preferred backup method, selected folders and backup storage location!" && sleep 2s;
+    echo "Then, re-run this script!"
     exit
 fi
 
@@ -51,12 +59,12 @@ then
     echo "@weekly 0       AutoSHIfT   ./home/$liuser/AutoSHIfT/AutoSHIfT.sh" >> /etc/anacrontab &&
     mkdir /home/$liuser/AutoSHIfT && mkdir /home/$liuser/AutoSHIfT/logs &&
     chown $liuser:$liuser /home/$liuser/AutoSHIfT && chown $liuser:$liuser /home/$liuser/AutoSHIfT/logs &&
-    echo "This is your first time running AutoSHIfT.";
-    echo "A weekly cron Job has been added to anacrontab, so,";
-    echo "You'll never have to manually run this script, unless you want to!";
-    echo "AutoSHIfT and it's logs will reside in ~>  /home/$liuser/AutoSHIfT";
-    echo "You'll receive a persistent notification every time AutoSHIfT runs successfully.";
-    echo "All backup and update actions are happening in the background, not on screen!";
+    echo "This is your first time running AutoSHIfT." && sleep 1s;
+    echo "A weekly cron Job has been added to anacrontab, so," && sleep 1s;
+    echo "You'll never have to manually run this script, unless you want to!" && sleep 1s;
+    echo "AutoSHIfT and it's logs will reside in ~>  /home/$liuser/AutoSHIfT" && sleep 1s;
+    echo "You'll receive a persistent notification every time AutoSHIfT runs successfully." && sleep 1s;
+    echo "All backup and update actions are happening in the background, not on screen!" && sleep 1s;
     echo "You won't see action until the script completes(up to 15 minutes). IT IS NOT FROZEN!!!";
     echo "Make a habit out of checking the logs ~>  /home/$liuser/AtuoSHIfT/logs";
 fi
@@ -74,17 +82,18 @@ fi
 if [ $TSCount -ge $TSList ];
 then
     echo "0" | timeshift --delete && dnf clean all && timeshift --create --comment AutoSHIfT &&
-    dnf upgrade -y && flatpak update -y
+    dnf upgrade -y && sudo -u $liuser flatpak update -y
 else
-    dnf clean all && timeshift --create --comment AutoSHIfT && dnf upgrade -y && flatpak update -y
+    dnf clean all && timeshift --create --comment AutoSHIfT && dnf upgrade -y && sudo -u $liuser flatpak update -y
 fi
 
 
 # This section creates a persistent notification at the end of each successful run.
-notification="notify-send -a 'AutoSHIfT' 'System updates succeeded. Restart recommended!' -u critical"
+notification="sudo -u $liuser DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $liuser)/bus notify-send -a 'AutoSHIfT' 'System updates succeeded. Reboot Recommended!' 'VIEW THE LOGS! ~/AutoSHIfT/logs/' -u critical"
 
 echo "*/1 * * * * $liuser $notification" >> /etc/crontab && sleep 59s &&
 sed -i '/AutoSHIfT/d' /etc/crontab &&
 
 find /home/$liuser/AutoSHIfT/logs -mtime +$D2K -delete
 exit
+
