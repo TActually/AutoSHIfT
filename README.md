@@ -18,7 +18,7 @@ I say similar because:<BR>
     Flatpak (you can, remove the flatpak commands if you don't use flatpaks)
     
 ## Installation and Usage
-Simply download the script from the <A HREF="https://github.com/TActually/AutoSHIfT/releases">Download Page</A><BR> or clone the repository.
+Simply download the script from the <A HREF="https://github.com/TActually/AutoSHIfT/releases">Download Page</A><BR> or clone the repository.<BR>
 Make it executable: `chmod +x AutoSHIfT.sh`<BR>
 Then run it with sudo: `sudo ./AutoSHIfT.sh`
 
@@ -35,7 +35,7 @@ Then run it with sudo: `sudo ./AutoSHIfT.sh`
 then you may want to edit the script and manually enter the user that the script should be installed under.
 The variable is specifically noted towards the top of script.
 
-*** The default settings for the number of backup copies to keep is 10. This can be adjusted in the script.
+*** The default settings for the number of backup copies to keep is 10. This can be adjusted in the script.<BR>
 The variable is noted towards the top of script
 
 Inspiration for this script comes from<BR>
