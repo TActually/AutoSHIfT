@@ -14,7 +14,7 @@ I say similar because:<BR>
 3) AutoSHIfT is made for use with RHEL/Fedora based systems that utilize the DNF package manager<BR>
 	***System Requirements:***<BR>
     RHEL or Fedora based OS utilizing dnf as it's package manager.<BR>
-    Timeshift backup utility (the script will alert & exit if timeshift is not installed)<BR>
+    Timeshift backup utility (The script will check Timeshift and install it, if not present)<BR>
     Flatpak (you can, remove the flatpak commands if you don't use flatpaks)
     
 ## Installation and Usage
@@ -31,9 +31,12 @@ Then run it with sudo: `sudo ./AutoSHIfT.sh`
 6) Create a log.<BR>
 7) Display a notification when the processes is complete. The notification has to be clicked to be dismissed.<BR>
 
-** The script will look for the logged in user automatically. If you have more than 1 user logged in on your machine, then you may want to edit the script and manually enter the user that the script should be installed under.
+** The script will look for the logged in user automatically. If you have more than 1 user logged in on your machine, or you just want to specify a different user,
+then you may want to edit the script and manually enter the user that the script should be installed under.
+The variable is specifically noted towards the top of script.
 
 *** The default settings for the number of backup copies to keep is 10. This can be adjusted in the script.
+The variable is noted towards the top of script
 
 Inspiration for this script comes from<BR>
 https://gitlab.com/gobonja/timeshift-autosnap <BR>
