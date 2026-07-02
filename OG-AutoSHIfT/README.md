@@ -1,5 +1,7 @@
-# ***AutoSHIfT*** 
+# ***OG-AutoSHIfT*** 
 ## About
+### This update represents the last of this iteration of AutoSHIfT. Before completely refactoring the code, I had made some updates to the script in terms of error handling and desktop notifications. I initially believed this would work with Wayland, but it does not. This version of the script only functions, properly, in X11 environments, or Wayland sitting on top of a fully functional X11 environment.
+
 Autoshift is a bash script that aims to provide similar functionality as timeshift-autosnap, written by Marko Gobin.<BR>
 I say similar because:<BR>
 1) This script does not add hooks to the package manager.<BR>
