@@ -1,6 +1,6 @@
 #! /usr/bin/bash
 
-#  Welcome to AutoSHIfT v1.2
+#  Welcome to AutoSHIfT v1.3
 #  Author: T Actually tactually@outlook.com
 #  Website: https://github.com/TActually/AutoSHIfT
 #  Licensed under GNU General Public License v3.0
@@ -14,6 +14,7 @@
 #  I'm not much of a coder, you see the script, modify it for your needs.
 #  ***IMPORTANT*** First/Manual run of this script must be run as root (sudo)!
 ################################################################################
+
 # check for root priviledges
 if [ "$(id -u)" -ne 0 ]
   then echo "Please run this script as root or with sudo."
@@ -21,8 +22,10 @@ if [ "$(id -u)" -ne 0 ]
 fi
 
 # This line discovers the 1st signed in user for the location of the script & logs.
+# If there are multiple users on your system (not including root), you may want to specify the intended user of this script.
+# To specify the intended user, please comment out the line below (line 27) then uncomment the line below it (line 28)
 liuser=$(users | cut -d ' ' -f 2)
-#liuser=USERNAME  #uncomment this line, comment the line above it to manually enter user.
+#liuser=USERNAME  
 
 # IMPORTANT: All timeshift backups (manual or automated) are counted and can be removed.
 # If you wish to keep manual backups, you'll need to protect or move them separately.
@@ -47,8 +50,8 @@ else
     echo "This script requires Timeshift backup utility and it ain't here. Installing it..." && sleep 2s;
     echo "Now!" && sleep 1s; dnf install timeshift -y;
     echo "Now that Timeshift has been installed, please take the time to set it up." && sleep 2s;
-    echo "You'll need to setup your preferred backup method, selected folders and backup storage location!" && sleep 4s;
-    echo "Then, re-run this script!" && sleep 2s
+    echo "You'll need to setup your preferred backup method, selected folders and backup storage location!" && sleep 2s;
+    echo "Then, re-run this script!" && sleep 4s
     exit
 fi
 
@@ -63,8 +66,9 @@ if [ "$(grep "AutoSHIfT" /etc/anacrontab -c)" == 0 ]
         echo "AutoSHIfT and it's logs will reside in ~>  /home/$liuser/AutoSHIfT" && sleep 2s;
         echo "You'll receive a persistent notification every time AutoSHIfT runs successfully." && sleep 1s;
         echo "All backup and update actions are happening in the background, not on screen!" && sleep 1s;
-        echo "You won't see action until the script completes(up to 15 minutes). IT IS NOT FROZEN!!!";
-        echo "Make a habit out of checking the logs ~>  /home/$liuser/AtuoSHIfT/logs"
+        echo "For this first run, you won't see action until the script completes(up to 15 minutes). IT IS NOT FROZEN!!!";
+        echo "Make a habit out of checking the logs ~>  /home/$liuser/AtuoSHIfT/logs" && sleep 2s;
+        echo "updates running... NOW!"
 fi
 
 logfile=$(date +"%m%d%Y-%I%M%p").log
@@ -87,15 +91,27 @@ exec &>> /home/"$liuser"/AutoSHIfT/logs/"$logfile"
 if [ "$TSCount" -ge $TSList ];
 then
     echo "0" | timeshift --delete && dnf clean all && timeshift --create --comment AutoSHIfT &&
-    dnf upgrade -y && flatpak update -y
+    dnf upgrade -y && runuser -u "$liuser" -- flatpak update -y
 else
-    dnf clean all && timeshift --create --comment AutoSHIfT && dnf upgrade -y && flatpak update -y
+    dnf clean all && timeshift --create --comment AutoSHIfT && dnf upgrade -y && runuser -u "$liuser" -- flatpak update -y
 fi
 
-# This section creates a persistent notification at the end of each successful run.
-notification="sudo --user=$liuser DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u "$liuser")/bus notify-send -a 'AutoSHIfT' 'System updates succeeded. Reboot Recommended!' 'VIEW THE LOGS! ~/AutoSHIfT/logs/' -u critical"
-
-echo "*/1 * * * * $liuser $notification" >> /etc/crontab && sleep 59s &&
-sed -i '/AutoSHIfT/d' /etc/crontab &&
+# log pruning - limits the total number of log files, based on age.
 find /home/"$liuser"/AutoSHIfT/logs -mtime +$D2K -delete
+
+# This section creates a persistent notification at the end of each successful run.
+uid=$(id -u "$liuser")
+export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus"
+export DISPLAY=":0"
+
+while [ "$ACTION_ID" != "reboot" ] && [ "$ACTION_ID" != "done" ]; do
+    ACTION_ID=$(sudo -u "$liuser" DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${uid}/bus /usr/bin/notify-send -a 'AutoSHIfT' 'System updates succeeded.' -A 'reboot=Reboot System' -A 'viewlog=View Log File' -A 'done=Do Nothing!'-u critical)
+    if [ "$ACTION_ID" = "reboot" ]; then
+        sleep 2s && reboot
+    elif [ "$ACTION_ID" = "viewlog" ]; then
+        runuser -u "$liuser" -- xdg-open /home/"$liuser"/AutoSHIfT/logs/"$logfile"
+    else
+        :
+    fi
+done
 exit
