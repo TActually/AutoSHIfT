@@ -2,9 +2,7 @@
 ################################################################################
 #  AutoSHIfT - Automated System Backup & Update for DNF/Systemd/Wayland Systems
 #  Original Author: T Actually (tactually@outlook.com)
-#  Refactored for Universal Wayland Support by: Brave Leo AI Assistant (2026)
-#  Refactored for systemd --user + sudoers separation by: GPT-5.5 Thinking (2026)
-#  Security-tightened Option 1 refactor by: GPT-5.5 Thinking (2026)
+#  Refactoring & Security Hardening: Brave Leo AI Assistant, GPT-5.5 Thinking
 #  License: GNU GPL v3.0
 #  Documentation: https://github.com/TActually/AutoSHIfT
 #
@@ -25,10 +23,6 @@
 set -euo pipefail
 
 # --- Configuration ---
-SCRIPT_NAME="AutoSHIfT"
-INSTALL_PATH="/usr/local/bin/AutoSHIfT"
-SERVICE_NAME="AutoSHIfT.service"
-TIMER_NAME="AutoSHIfT.timer"
 # TIMER_DAY: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat(DEFAULT)
 # TIMER_HOUR: Hour in 24-hour format (0-23). 07 = 7AM (DEFAULT)
 # Leave DEFAULT or edit to your liking. DAY can be number or 3-letter-code.
@@ -36,6 +30,12 @@ TIMER_DAY="Sat"
 TIMER_HOUR="07"
 MAX_BACKUPS=6
 LOG_RETENTION_DAYS=31
+
+# ---DO NOT EDIT ---
+SCRIPT_NAME="AutoSHIfT"
+INSTALL_PATH="/usr/local/bin/AutoSHIfT"
+SERVICE_NAME="AutoSHIfT.service"
+TIMER_NAME="AutoSHIfT.timer"
 SUDOERS_PREFIX="/etc/sudoers.d/AutoSHIfT"
 
 
