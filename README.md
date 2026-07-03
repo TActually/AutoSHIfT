@@ -1,4 +1,4 @@
-# ***AutoSHIfT*** 
+# ***AutoSHIfT V2.0*** 
 ## About
 Autoshift seamlessly combines **system snapshots** (via Timeshift) with **package updates** (DNF + Flatpak), ensuring your system is always backed up before any changes are applied.<BR>
 It is a bash script that aims to provide similar functionality as timeshift-autosnap, written by Marko Gobin.<BR>
