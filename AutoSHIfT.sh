@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 ################################################################################
 #  AutoSHIfT - Automated System Backup & Update for DNF/Systemd/Wayland Systems
+#  Version 2.0
 #  Original Author: T Actually (tactually@outlook.com)
 #  Refactoring & Security Hardening: Brave Leo AI Assistant, GPT-5.5 Thinking
 #  License: GNU GPL v3.0
