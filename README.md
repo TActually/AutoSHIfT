@@ -75,7 +75,9 @@ This will start the service, in the background. You will get desktop notificatio
 ## 📂 File Locations
 
 - **Script:** `/usr/local/bin/AutoSHIfT`
-- **Service/Timer:** `~/.config/systemd/user/AutoSHIfT.{service,timer}`
+- **Service/Timer:** `~/.config/systemd/user/AutoSHIfT.{service,timer}`<BR>
+	To change the execution time, after first run, edit `~/config/systemd/user/AutoSHIfT.timer`.<BR>
+	[Understanding Systemd Timers](https://blog.techiescamp.com/systemd-timers/)
 - **Logs:** `~/AutoSHIfT/logs/`
 - **Sudoers Rule:** `/etc/sudoers.d/AutoSHIfT-<username>`
 
